@@ -1,0 +1,60 @@
+<link rel="import" href="../elements/popup-base.html">
+
+<dom-module id="popup-cali-registrati">
+
+    <script>
+        class PopupCaliRegistrati extends PopupBase {
+
+
+            static get form() {
+                return ` 
+                
+                     <h2 class="titolo">Cali</h2>
+                <div class="carburanti">
+                    <paper-input type="number" label="Benzina" value="{{payload.caliRegistrati.b}}"></paper-input>
+                    <paper-input type="number" label="Gasolio" value="{{payload.caliRegistrati.g}}"></paper-input>
+                </div>
+                `
+            }
+
+
+            static get is() {
+                return 'popup-cali-registrati';
+            }
+
+            static get properties() {
+                return {
+
+
+                    collection: {
+                        type: String,
+                        value: ()=>'caliRegistrati'
+                    },
+
+                    payload: {
+                        type: Object,
+                        value: {
+                            caliRegistrati: {
+                                b: 0,
+                                g: 0
+                            },
+                        }
+                    }
+                };
+            }
+
+            azzeraTutto() {
+                this.payload = {
+                    caliRegistrati: {
+                        b: 0,
+                        g: 0
+                    },
+                }
+            }
+
+
+        }
+
+        window.customElements.define(PopupCaliRegistrati.is, PopupCaliRegistrati);
+    </script>
+</dom-module>

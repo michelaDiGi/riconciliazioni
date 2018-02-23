@@ -1,0 +1,88 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="elements/log-in.html">
+<link rel="import" href="riconciliazioni-ip-app.html">
+
+<dom-module id="log-in-shell">
+    <template>
+        <style>
+             :host {
+                display: block;
+                --background-main-color: rgb(20, 20, 250);
+                --main-title-color: white;
+                --main-font: Arial, Helvetica, sans-serif;
+                --mixin-title: {
+                    color: var(--main-title-color);
+                    font-family: var(--main-font);
+                    text-transform: uppercase;
+                    font-style: oblique;
+                    font-weight: bold;
+                    background-color: var(--background-main-color);
+                    border-style: solid;
+                    border-color: white;
+                }
+                --paper-button: {
+                    font-family: var(--main-font);
+                    margin: 7px;
+                    font-size: 95%;
+                    border: outset var(--background-main-color);
+                }
+                --gestione-pagine: {
+                    display: flex;
+                    flex-direction: column;
+                }
+                --gestione-tabelle: {
+                    border-collapse: collapse;
+                    border: 1px solid black;
+                }
+            }
+        </style>
+
+
+        <iron-pages selected="[[paginaSelezionata]]">
+            <log-in></log-in>
+            <riconciliazioni-ip-app></riconciliazioni-ip-app>
+        </iron-pages>
+
+
+    </template>
+
+    <script>
+        class LogInShell extends Polymer.Element {
+
+            static get is() {
+                return 'log-in-shell';
+            }
+
+
+            static get properties() {
+                return {
+                    paginaSelezionata: {
+                        type: Number,
+                        value: () => {
+                            return 0
+                        }
+                    }
+                };
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+
+                firebase.auth().onAuthStateChanged((user) => {;
+                    if (user) {
+                        this.paginaSelezionata = 1
+                        console.log(this.paginaSelezionata);
+                    } else {
+                        this.paginaSelezionata = 0
+                        console.log(this.paginaSelezionata);
+                    }
+                });
+
+            }
+
+        }
+
+        window.customElements.define(LogInShell.is, LogInShell);
+    </script>
+</dom-module>

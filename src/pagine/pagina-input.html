@@ -1,0 +1,71 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+
+<dom-module id="pagina-input">
+    <template>
+        <style>
+            :host {
+                display: block
+            }
+            .paginput{
+                @apply --gestione-pagine;
+             }
+
+        </style>
+
+       <div class="paginput">
+       <paper-button raised on-tap="apritest">carico</paper-button>
+       <paper-button raised on-tap="aprisecondotest">Eccedenze già registrate</paper-button>
+       <paper-button raised on-tap="apriterzotest">Scatti a vuoto</paper-button>
+       <paper-button raised on-tap="apriquartotest">Cali già registrati</paper-button>
+       <paper-button raised on-tap="apriquintotest">Cali tecnici</paper-button>
+    </div>
+    </template>
+
+    <script>
+
+        class PaginaInput extends Polymer.Element {
+
+            static get is() {
+                return 'pagina-input';
+            }
+
+        
+            static get properties() {
+                return {
+                   
+                };
+            }
+
+
+            inviaEvento(popUpDaAprire){
+                let dettagliEvento = {
+                    bubbles:true,
+                    detail:{
+                        popup:popUpDaAprire
+                    }
+                }
+                window.dispatchEvent(new CustomEvent( 'apriDialog', dettagliEvento) )
+            }
+            apritest (e) {
+                this.inviaEvento('test')
+            }
+
+            aprisecondotest(){
+                this.inviaEvento('secondotest')
+            }
+            apriterzotest (){
+                this.inviaEvento('terzotest')
+            }
+            apriquartotest (){
+                this.inviaEvento('quartotest')
+            }
+            apriquintotest (){
+                this.inviaEvento('quintotest')
+            }
+        }
+
+        window.customElements.define(PaginaInput.is, PaginaInput);
+    </script>
+</dom-module>

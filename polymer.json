@@ -1,0 +1,10 @@
+{  "sources": [
+  "src/**/*",
+  "immagini/**/*"
+],
+  "lint": {
+    "rules": [
+      "polymer-2"
+    ]
+  }
+}

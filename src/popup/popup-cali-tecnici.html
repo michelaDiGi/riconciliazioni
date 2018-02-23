@@ -1,0 +1,60 @@
+<link rel="import" href="../elements/popup-base.html">
+
+<dom-module id="popup-cali-tecnici">
+
+    <script>
+        class PopupCaliTecnici extends PopupBase {
+
+
+            static get form() {
+                return ` 
+                
+                     <h2 class="titolo">Cali</h2>
+                <div class="carburanti">
+                    <paper-input type="number" label="Benzina" value="{{payload.caliTecnici.b}}"></paper-input>
+                    <paper-input type="number" label="Gasolio" value="{{payload.caliTecnici.g}}"></paper-input>
+                </div>
+                `
+            }
+
+
+            static get is() {
+                return 'popup-cali-tecnici';
+            }
+
+            static get properties() {
+                return {
+
+
+                    collection: {
+                        type: String,
+                        value: 'caliTecnici'
+                    },
+
+                    payload: {
+                        type: Object,
+                        value: {
+                            caliTecnici: {
+                                b: 0,
+                                g: 0
+                            },
+                        }
+                    }
+                };
+            }
+
+            azzeraTutto() {
+                this.payload = {
+                    caliTecnici: {
+                        b: 0,
+                        g: 0
+                    },
+                }
+            }
+
+
+        }
+
+        window.customElements.define(PopupCaliTecnici.is, PopupCaliTecnici);
+    </script>
+</dom-module>

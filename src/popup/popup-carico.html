@@ -1,0 +1,89 @@
+
+<link rel="import" href="../elements/popup-base.html">
+
+<dom-module id="popup-carico">
+
+    <script>
+        class PopupCarico extends PopupBase {
+
+
+            static get form(){
+                return  ` 
+                
+               
+                <h2 class="titolo">Nuovo Carico</h2>
+                <div class="carburanti">
+                    <paper-input type="number" label="Benzina" value="{{payload.nuovoCarico.b}}"></paper-input>
+                    <paper-input type="number" label="Gasolio" value="{{payload.nuovoCarico.g}}"></paper-input>
+                </div>
+                <h2 class="titolo">Eccedenze</h2>
+                <div class="carburanti">
+                    <paper-input type="number" label="Benzina" value="{{payload.eccedenze.b}}"></paper-input>
+                    <paper-input type="number" label="Gasolio" value="{{payload.eccedenze.g}}"></paper-input>
+                </div>
+                <h2 class="titolo">Cali</h2>
+                <div class="carburanti">
+                    <paper-input type="number" label="Benzina" value="{{payload.cali.b}}"></paper-input>
+                    <paper-input type="number" label="Gasolio" value="{{payload.cali.g}}"></paper-input>
+                </div>
+                `
+            }
+
+
+            static get is() {
+                return 'popup-carico';
+            }
+
+            static get properties() {
+                return {
+
+
+                    collection: {
+                        type: String,
+                        value: ()=>'carico'
+                    },
+
+                    payload: {
+                        type: Object,
+                        value: {
+                            nuovoCarico: {
+                                b: 0,
+                                g: 0
+                            },
+                            eccedenze: {
+                                b: 0,
+                                g: 0
+                            },
+                            cali: {
+                                b: 0,
+                                g: 0
+                            }
+                        }
+                    }
+                };
+            }
+
+
+            azzeraTutto() {
+                this.payload = {
+                    nuovoCarico: {
+                        b: 0,
+                        g: 0
+                    },
+                    eccedenze: {
+                        b: 0,
+                        g: 0
+                    },
+                    cali: {
+                        b: 0,
+                        g: 0
+                    }
+                }
+            }
+
+
+        }
+
+        window.customElements.define(PopupCarico.is, PopupCarico);
+    </script>
+</dom-module>

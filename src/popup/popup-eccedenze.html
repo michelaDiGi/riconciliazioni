@@ -1,0 +1,62 @@
+<link rel="import" href="../elements/popup-base.html">
+
+<dom-module id="popup-eccedenze">
+
+    <script>
+        class PopupEccedenze extends PopupBase {
+
+
+            static get form() {
+                return ` 
+                
+               
+                <h2 class="titolo">Eccedenze registrate</h2>
+                <div class="carburanti">
+                    <paper-input type="number" label="Benzina" value="{{payload.eccedenzeRegistrate.b}}"></paper-input>
+                    <paper-input type="number" label="Gasolio" value="{{payload.eccedenzeRegistrate.g}}"></paper-input>
+                </div>
+   
+                `
+            }
+
+
+            static get is() {
+                return 'popup-eccedenze';
+            }
+
+            static get properties() {
+                return {
+
+
+                    collection: {
+                        type: String,
+                        value: ()=>'eccedenze'
+                    },
+
+                    payload: {
+                        type: Object,
+                        value: {
+                            eccedenzeRegistrate: {
+                                b: 0,
+                                g: 0
+                            },
+
+                        }
+                    }
+                };
+            }
+            azzeraTutto() {
+                this.payload = {
+                    eccedenzeRegistrate: {
+                        b: 0,
+                        g: 0
+                    },
+                }
+            }
+
+
+        }
+
+        window.customElements.define(PopupEccedenze.is, PopupEccedenze);
+    </script>
+</dom-module>

@@ -1,0 +1,59 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+
+<dom-module id="log-in">
+    <template>
+        <style>
+            :host {
+                display: block
+            }
+        </style>
+
+<paper-input value="{{mail}}" label="mail"></paper-input>
+<paper-input value="{{pass}}" label="password"></paper-input>
+
+<paper-button raised on-tap="accedi">accedi</paper-button>
+
+
+    </template>
+
+    <script>
+       
+        class LogIn extends Polymer.Element {
+          
+            static get is() {
+                return 'log-in';
+            }
+
+          
+            static get properties() {
+                return {
+                    mail:{
+                        type:String,
+                        value: 'qqq@qqq.com'
+                    },
+                    pass:{
+                        type:String,
+                        value: 'password'
+                    },
+                };
+            }
+            accedi () {
+                firebase
+                .auth()
+                .signInWithEmailAndPassword(this.mail, this.pass)
+  
+                .catch(()=>{this.qualcosaNonVa()})
+            }
+            qualcosaNonVa (){
+                console.log('catchAccedi');
+            }
+
+
+        }
+
+        window.customElements.define(LogIn.is, LogIn);
+    </script>
+</dom-module>

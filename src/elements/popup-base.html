@@ -1,0 +1,100 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/vaadin-dialog/vaadin-dialog.html">
+
+<dom-module id="popup-base">
+
+    <script>
+
+        class PopupBase extends Polymer.Element {
+
+            static get template(){
+                return `
+   
+         
+        <vaadin-dialog id="popup" no-close-on-outside-click>
+        <template>
+                <style>
+            
+                    ${this.nuovoCss}
+        </style>
+            <div class="container">
+                    <paper-input label="Data" type="date" value="{{dataCarico}}"></paper-input>
+                    ${this.form}
+            </div>
+            <div class="buttons">
+                <paper-button on-tap="close">Annulla</paper-button>
+                <paper-button on-tap="salva" autofocus>Salva</paper-button>
+            </div>
+            </template>
+        </vadiin-dialog>
+                `
+            }
+          
+            static get form(){
+                return `
+
+                `
+            }
+            static get nuovoCss(){
+                return `
+              
+                    .titolo {
+       
+                        text-align: center;
+                    }
+                    .carburanti {
+                        display: flex;
+                        flex-direction: row;
+                    }
+                `
+            }
+
+            static get is() {
+                return 'popup-base';
+            }
+
+            static get properties() {
+                return {
+                    dataCarico: {
+                        type: Date,
+                      
+                    },
+
+                };
+            }
+
+            close(){
+                this.$.popup.opened=false
+            }
+            open() {
+                this.dataCarico = new Date()
+                this.$.popup.opened=true
+
+            }
+
+            salva() {
+                let documentoDaSalvare = this.payload
+                documentoDaSalvare.dataCarico = new Date(this.dataCarico)
+
+                db.collection(this.collection).add()
+                    .then( (docRef) =>{
+                        console.log("Document written with ID: ", docRef.id);
+                        this.close()
+                       this.azzeraTutto()
+ 
+
+                    })
+                    .catch(function (error) {
+                        console.error("Error adding document: ", error);
+                    });
+            }
+
+ 
+
+        }
+
+        window.customElements.define(PopupBase.is, PopupBase);
+    </script>
+</dom-module>

@@ -1,0 +1,63 @@
+<link rel="import" href="../elements/popup-base.html">
+
+<dom-module id="popup-scatti">
+
+    <script>
+        class PopupScatti extends PopupBase {
+
+
+            static get form() {
+                return ` 
+                
+               
+                <h2 class="titolo">Scatti a vuoto</h2>
+                <div class="carburanti">
+                    <paper-input type="number" label="Benzina" value="{{payload.scatti.b}}"></paper-input>
+                    <paper-input type="number" label="Gasolio" value="{{payload.scatti.g}}"></paper-input>
+                </div>
+   
+                `
+            }
+
+
+            static get is() {
+                return 'popup-scatti';
+            }
+
+            static get properties() {
+                return {
+
+
+                    collection: {
+                        type: String,
+                        value: ()=>'scatti'
+                    },
+
+                    payload: {
+                        type: Object,
+                        value: {
+                            scatti: {
+                                b: 0,
+                                g: 0
+                            },
+
+                        }
+
+                    },
+
+    
+                };
+            }
+            azzeraTutto() {
+                this.payload = {
+                    scatti: {
+                        b: 0,
+                        g: 0
+                    }
+                }
+            }
+        }
+
+        window.customElements.define(PopupScatti.is, PopupScatti);
+    </script>
+</dom-module>

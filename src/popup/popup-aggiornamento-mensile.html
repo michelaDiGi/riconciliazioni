@@ -1,0 +1,161 @@
+<link rel="import" href="../elements/popup-base.html">
+
+<dom-module id="popup-aggiornamento-mensile">
+
+    <script>
+        class PopupAggiornamentoMensile extends PopupBase {
+
+
+            static get form() {
+                return ` 
+                
+                <div class="bloccoaperturachiusura">
+                        <div class="titolocarburante">Benzina</div>
+                        <div class=chiusurapertura>
+                            <div class="rigacarburante">
+                                <div class="etichettatipo">Chiusura</div>
+                                <paper-input label="Pompa 1" type="number" class="bordo" value="{{payload.benzina.chiusura.pompa1}}"></paper-input>
+                                <paper-input label="Pompa 2" type="number" class="bordo" value="{{payload.benzina.chiusura.pompa2}}"></paper-input>
+                            </div>
+                            <div class="rigacarburante">
+                                <div class="etichettatipo">Apertura</div>
+                                <paper-input label="Pompa 1" type="number" class="bordo" value="{{payload.benzina.apertura.pompa1}}"></paper-input>
+                                <paper-input label="Pompa 2" type="number" class="bordo" value="{{payload.benzina.apertura.pompa2}}"></paper-input>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bloccoaperturachiusura">
+                        <div class="titolocarburante">Gasolio</div>
+                        <div class=chiusurapertura>
+                            <div class="rigacarburante">
+                                <div class="etichettatipo margine">Chiusura</div>
+                                <paper-input label="Pompa 1" type="number" class="bordo" value="{{payload.gasolio.chiusura.pompa1}}"></paper-input>
+                                <paper-input label="Pompa 2" type="number" class="bordo" value="{{payload.gasolio.chiusura.pompa2}}"></paper-input>
+                            </div>
+                            <div class="rigacarburante">
+                                <div class="etichettatipo">Apertura</div>
+                                <paper-input label="Pompa 1" type="number" class="bordo" value="{{payload.gasolio.apertura.pompa1}}"></paper-input>
+                                <paper-input label="Pompa 2" type="number" class="bordo" value="{{payload.gasolio.apertura.pompa2}}"></paper-input>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chiusurapertura">
+                            
+                            <div class="rigacarburante">
+                                <div class="etichettatipo">Rimanenza effettiva</div>
+                                <paper-input type="number" class="bordo" label="Benzina" value="{{payload.rimanenzaeffettiva.benzina}}"></paper-input>
+                                <paper-input type="number" class="bordo" label="Gasolio" value="{{payload.rimanenzaeffettiva.gasolio}}"></paper-input>
+                            </div>
+                    </div>
+                
+                `
+            }
+
+            static get nuovoCss() {
+                return ` 
+                    .rigacarburante {
+                        display: flex;
+                        flex-direction: row;
+                 align-items: stretch;
+                    }
+
+                    .bordo {
+                        border-style: solid;
+                        border-width: 1px;
+                        margin: 3px;
+                    }
+                    .titolocarburante{
+                        display: flex;
+                        text-align: center;
+                    }
+                    .margine {
+                        margin: 3px;
+                    }
+                
+                `
+            }
+
+
+            static get is() {
+                return 'popup-aggiornamento-mensile';
+            }
+
+            static get properties() {
+                return {
+
+
+                    collection: {
+                        type: String,
+                        value: () => 'aggiornamentoMensile'
+                    },
+
+                    payload: {
+                        type: Object,
+                        value: {
+                            benzina: {
+                                chiusura: {
+                                    pompa1: 0,
+                                    pompa2: 0
+                                },
+                                apertura: {
+                                    pompa1: 0,
+                                    pompa2: 0
+                                }
+                            },
+                            gasolio: {
+                                chiusura: {
+                                    pompa1: 0,
+                                    pompa2: 0
+                                },
+                                apertura: {
+                                    pompa1: 0,
+                                    pompa2: 0
+                                }
+                            },
+                           
+                            rimanenzaeffettiva: {
+                                benzina: 0,
+                                gasolio: 0
+                            }
+                        }
+                    }
+                };
+            }
+
+            azzeraTutto() {
+                this.payload = {
+                    benzina: {
+                        chiusura: {
+                            pompa1: 0,
+                            pompa2: 0
+                        },
+                        apertura: {
+                            pompa1: 0,
+                            pompa2: 0
+                        }
+                    },
+                    gasolio: {
+                        chiusura: {
+                            pompa1: 0,
+                            pompa2: 0
+                        },
+                        apertura: {
+                            pompa1: 0,
+                            pompa2: 0
+                        }
+                    },
+                    
+                    rimanenzaeffettiva: {
+                        benzina: 0,
+                        gasolio: 0
+                    }
+                }
+            }
+
+
+        }
+
+        window.customElements.define(PopupAggiornamentoMensile.is, PopupAggiornamentoMensile);
+    </script>
+</dom-module>

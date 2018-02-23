@@ -1,0 +1,346 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="pagina-consulta-riconciliazioni">
+    <template>
+        <style>
+             :host {
+                display: block;
+            }
+            /* table, th, td {
+    border: 1px solid black; */
+
+            tr:hover {
+                font-weight: bold;
+            }
+
+            table,
+            th,
+            td {
+                @apply --gestione-tabelle;
+            }
+
+            td {
+                overflow: hidden;
+            }
+
+            table {
+                width: 100%;
+                border: 1px solid #000;
+            }
+
+            td.tdtitolo            {
+                width: 10%;
+            }
+
+            td.dato {
+                width: 45%;
+                /* Not necessary, since only 70% width remains */
+            }
+        </style>
+
+        <h2>Benzina</h2>
+        <table>
+            <tr>
+                <th></th>
+                <th>pompa1</th>
+                <th>pompa2</th>
+            </tr>
+            <tr>
+                <td class="tdtitolo">Chiusura</td>
+                <td class="dato">[[aggiornamentoMensileBenzina.cp1]]</td>
+                <td class="dato">[[aggiornamentoMensileBenzina.cp2]]</td>
+            </tr>
+            <tr>
+                <td class="tdtitolo">Apertura</td>
+                <td class="dato">[[aggiornamentoMensileBenzina.ap1]]</td>
+                <td class="dato">[[aggiornamentoMensileBenzina.ap2]]</td>
+            </tr>
+        </table>
+
+        <h2>Gasolio</h2>
+        <table style="width:100%">
+            <tr>
+                <th></th>
+                <th>pompa1</th>
+                <th>pompa2</th>
+            </tr>
+            <tr>
+                <td class="tdtitolo">Chiusura</td>
+                <td  class="dato">[[aggiornamentoMensileGasolio.cp1]]</td>
+                <td  class="dato">[[aggiornamentoMensileGasolio.cp2]]</td>
+            </tr>
+            <tr>
+                <td class="tdtitolo">Apertura</td>
+                <td  class="dato">[[aggiornamentoMensileGasolio.ap1]]</td>
+                <td  class="dato">[[aggiornamentoMensileGasolio.ap2]]</td>
+            </tr>
+        </table>
+
+
+        <h2>totali carichi</h2>
+        <table style="width:100%">
+            <tr>
+                <th></th>
+                <th>benzina</th>
+                <th>gasolio</th>
+            </tr>
+
+
+            <tr>
+                <td class="tdtitolo">Rimanenze iniziali </td>
+                <td  class="dato">[[totaleCaricoBenzina.rimIniziali]]</td>
+                <td  class="dato">[[totaleCaricoGasolio.rimIniziali]]</td>
+            </tr>
+            <tr>
+                <td class="tdtitolo">carico</td>
+                <td  class="dato">[[totaleCaricoBenzina.sommaCarichiBenzina]]</td>
+                <td  class="dato">[[totaleCaricoGasolio.sommaCarichiGasolio]]</td>
+            </tr>
+
+            <tr>
+                <td class="tdtitolo">eccedenze registrate</td>
+                <td  class="dato"> [[totaleCaricoBenzina.sommaEccedBenzina]]</td>
+                <td class="dato">[[totaleCaricoGasolio.sommaEccedGasolio]]</td>
+            </tr>
+            <tr>
+                <td class="tdtitolo">Scatti a vuoto</td>
+                <td class="dato">[[totaleCaricoBenzina.sommaScattiBenzina]]</td>
+                <td class="dato">[[totaleCaricoGasolio.sommaScattiGasolio]]</td>
+            </tr>
+            <tr>
+                <td class="tdtitolo">Eccedenze Trasporto</td>
+                <td  class="dato">[[totaleCaricoBenzina.sommaEccTrasBenzina]]</td>
+                <td  class="dato">[[totaleCaricoGasolio.sommaEccTrasGasolio]]</td>
+            </tr>
+
+            <tr>
+                <td class="tdtitolo">Totale Carico</td>
+                <td  class="dato">[[totaleCaricoBenzina.totBenzina]]</td>
+                <td  class="dato">[[totaleCaricoGasolio.totGasolio]]</td>
+            </tr>
+        </table>
+
+
+
+    </template>
+
+    <script>
+        class PaginaConsultaRiconciliazioni extends Polymer.Element {
+
+            static get is() {
+                return 'pagina-consulta-riconciliazioni';
+            }
+
+            static get properties() {
+                return {
+                    aggiornamentoMensileBenzina: {
+                        type: Object
+                    },
+                    aggiornamentoMensileGasolio: {
+                        type: Object
+                    },
+                    totaleCaricoBenzina: {
+                        type: Object
+                    },
+                    totaleCaricoGasolio: {
+                        type: Object
+                    },
+                };
+            }
+
+
+            recuperaDati(anno) {
+                let arrayCollections = [
+                    "aggiornamentoAnnuale",
+                    "caliRegistrati",
+                    "aggiornamentoMensile",
+                    "caliTecnici",
+                    "carico",
+                    "eccedenze",
+                    "scatti"
+                ]
+
+                let dataInferioreStringa = `1-1-${anno}`
+                let dataInferioreTimeStamp = new Date(dataInferioreStringa)
+
+                let dataSuperioreStringa = `1-1-${anno+1}`
+                let dataSuperioreTimeStamp = new Date(dataSuperioreStringa)
+
+
+                let promesse = arrayCollections.reduce((acc, elem) => {
+                    acc.push(
+
+                        new Promise((resolve, reject) => {
+                            db.collection(elem)
+                                .where("dataCarico", ">", dataInferioreTimeStamp)
+                                .where("dataCarico", "<", dataSuperioreTimeStamp)
+                                .get()
+                                .then(function (querySnapshot) {
+                                    let risultato = []
+                                    querySnapshot.forEach((doc) => {
+                                        risultato.push({
+                                            id: doc.id,
+                                            data: doc.data()
+                                        })
+                                    })
+                                    resolve(risultato)
+                                })
+                                .catch((error) => {
+                                    reject(error)
+                                });
+                        })
+                    )
+
+                    return acc
+                }, [])
+
+
+                Promise.all(promesse).then((risultati) => {
+                    this.aggiornamentoMensile(risultati[2])
+                    this.totalecCarico(risultati[0], risultati[4], risultati[6], risultati[5])
+
+                })
+
+            }
+
+            totalecCarico(aggiornamentoAnnuale, carico, scatti, eccedenze) {
+                let anno = new Date()
+                let annoDaControllare = anno.getFullYear()
+                let meseDaControllare = anno.getMonth()
+                /*       let indexDaControllareAggAnn = aggiornamentoAnnuale.findIndex((elem) => {
+                          let conferma = elem.data.dataCarico.getFullYear() === annoDaControllare
+                          return conferma
+                      }) */
+
+                let arrayRimIniz = aggiornamentoAnnuale.filter((elem) => {
+                    let conferma = elem.data.dataCarico.getFullYear() === annoDaControllare
+                    return conferma
+                })
+                let arrayCarichi = carico.filter((elem) => {
+                    let conferma = elem.data.dataCarico.getFullYear() === annoDaControllare && elem.data
+                        .dataCarico.getMonth() <= meseDaControllare
+                    return conferma
+                })
+                let arrayscatti = scatti.filter((elem) => {
+                    let conferma = elem.data.dataCarico.getFullYear() === annoDaControllare && elem.data
+                        .dataCarico.getMonth() <= meseDaControllare
+                    return conferma
+                })
+                let arrayeccedenze = eccedenze.filter((elem) => {
+                    let conferma = elem.data.dataCarico.getFullYear() === annoDaControllare && elem.data
+                        .dataCarico.getMonth() <= meseDaControllare
+                    return conferma
+                })
+
+                let sommaCarichiBenzina = arrayCarichi.reduce((acc, elem) => {
+                    return acc + parseInt(elem.data.nuovoCarico.b)
+                }, 0)
+                let sommaCarichiGasolio = arrayCarichi.reduce((acc, elem) => {
+                    return acc + parseInt(elem.data.nuovoCarico.g)
+                }, 0)
+
+                let sommaEccTrasBenzina = arrayCarichi.reduce((acc, elem) => {
+                    return acc + parseInt(elem.data.eccedenze.b)
+                }, 0)
+                let sommaEccTrasGasolio = arrayCarichi.reduce((acc, elem) => {
+                    return acc + parseInt(elem.data.eccedenze.g)
+                }, 0)
+
+                let sommaScattiBenzina = arrayscatti.reduce((acc, elem) => {
+                    return acc + parseInt(elem.data.scatti.b)
+                }, 0)
+                let sommaScattiGasolio = arrayscatti.reduce((acc, elem) => {
+                    return acc + parseInt(elem.data.scatti.g)
+                }, 0)
+                let sommaEccedBenzina = arrayeccedenze.reduce((acc, elem) => {
+                    return acc + parseInt(elem.data.eccedenzeRegistrate.b)
+                }, 0)
+                let sommaEccedGasolio = arrayeccedenze.reduce((acc, elem) => {
+                    return acc + parseInt(elem.data.eccedenzeRegistrate.g)
+                }, 0)
+
+
+                let totBenzina = parseInt(arrayRimIniz[0].data.rimanenzeiniziali.benzina)
+
+
+
+                this.totaleCaricoBenzina = {
+                    rimIniziali: arrayRimIniz[0].data.rimanenzeiniziali.benzina,
+                    sommaCarichiBenzina: sommaCarichiBenzina,
+                    sommaScattiBenzina: sommaScattiBenzina,
+                    sommaEccedBenzina: sommaEccedBenzina,
+                    sommaEccTrasBenzina: sommaEccTrasBenzina,
+                    totBenzina: parseInt(arrayRimIniz[0].data.rimanenzeiniziali.benzina) +
+                        sommaCarichiBenzina + sommaScattiBenzina + sommaEccedBenzina + sommaEccTrasBenzina
+                }
+                this.totaleCaricoGasolio = {
+                    rimIniziali: arrayRimIniz[0].data.rimanenzeiniziali.gasolio,
+                    sommaCarichiGasolio: sommaCarichiGasolio,
+                    sommaScattiGasolio: sommaScattiGasolio,
+                    sommaEccedGasolio: sommaEccedGasolio,
+                    sommaEccTrasGasolio: sommaEccTrasGasolio,
+                    totGasolio: parseInt(arrayRimIniz[0].data.rimanenzeiniziali.gasolio) +
+                        sommaCarichiGasolio + sommaScattiGasolio + sommaEccedGasolio + sommaEccTrasGasolio
+                }
+
+                console.log('');
+
+            }
+
+            aggiornamentoMensile(valore) {
+                let anno = new Date()
+                let annoDaControllare = anno.getFullYear()
+                let meseDaControllare = anno.getMonth()
+
+                let indexDaControllare = valore.findIndex((elem) => {
+                    let conferma = elem.data.dataCarico.getMonth() === meseDaControllare && elem.data.dataCarico
+                        .getFullYear() === annoDaControllare
+                    return conferma
+                })
+
+
+                let aperturaBenzinaP1 = valore[indexDaControllare].data.benzina.apertura.pompa1
+                let aperturaBenzinaP2 = valore[indexDaControllare].data.benzina.apertura.pompa2
+                let aperturaGasolioP1 = valore[indexDaControllare].data.gasolio.apertura.pompa1
+                let aperturaGasolioP2 = valore[indexDaControllare].data.gasolio.apertura.pompa2
+                let chiusuraBenzinaP1 = valore[indexDaControllare].data.benzina.chiusura.pompa1
+                let chiusuraBenzinaP2 = valore[indexDaControllare].data.benzina.chiusura.pompa2
+                let chiusuraGasolioP1 = valore[indexDaControllare].data.gasolio.chiusura.pompa1
+                let chiusuraGasolioP2 = valore[indexDaControllare].data.gasolio.chiusura.pompa2
+
+                let amb = {
+                    cp1: chiusuraBenzinaP1,
+                    cp2: chiusuraBenzinaP2,
+                    ap1: aperturaBenzinaP1,
+                    ap2: aperturaBenzinaP2,
+                    tp1: chiusuraBenzinaP1 - aperturaBenzinaP1,
+                    tp2: chiusuraBenzinaP2 - aperturaBenzinaP2,
+                    tt: (chiusuraBenzinaP1 - aperturaBenzinaP1) + (chiusuraBenzinaP2 - aperturaBenzinaP2)
+                }
+
+                this.aggiornamentoMensileBenzina = amb
+
+                let amg = {
+                    cp1: chiusuraGasolioP1,
+                    cp2: chiusuraGasolioP2,
+                    ap1: aperturaGasolioP1,
+                    ap2: aperturaGasolioP2,
+                    tp1: chiusuraGasolioP1 - aperturaGasolioP1,
+                    tp2: chiusuraGasolioP2 - aperturaGasolioP2,
+                    tt: (chiusuraGasolioP1 - aperturaGasolioP1) + (chiusuraGasolioP2 - aperturaGasolioP2)
+                }
+
+                this.aggiornamentoMensileGasolio = amg
+
+            }
+            connectedCallback() {
+                super.connectedCallback();
+                let anno = new Date()
+                let annoDaControllare = anno.getFullYear()
+                this.recuperaDati(annoDaControllare)
+            }
+        }
+
+        window.customElements.define(PaginaConsultaRiconciliazioni.is, PaginaConsultaRiconciliazioni);
+    </script>
+</dom-module>

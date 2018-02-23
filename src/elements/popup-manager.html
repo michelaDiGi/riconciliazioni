@@ -1,0 +1,77 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../popup/popup-carico.html">
+<link rel="import" href="../popup/popup-eccedenze.html">
+<link rel="import" href="../popup/popup-scatti.html">
+<link rel="import" href="../popup/popup-cali-registrati.html">
+<link rel="import" href="../popup/popup-cali-tecnici.html">
+<link rel="import" href="../popup/popup-aggiornamento-mensile.html">
+<link rel="import" href="../popup/popup-aggiornamento-annuale.html">
+
+<dom-module id="popup-manager">
+    <template>
+        <style>
+             :host {
+                display: block
+            }
+
+            .titolo {
+                text-align: center;
+            }
+
+            .carburanti {
+                display: flex;
+                flex-direction: row;
+            }
+
+            paper-input {
+                margin: 5px;
+            }
+        </style>
+
+        <popup-carico id="test"></popup-carico>
+
+        <popup-eccedenze id="secondotest"></popup-eccedenze>
+
+        <popup-scatti id="terzotest"></popup-scatti>
+
+        <popup-cali-registrati id="quartotest"></popup-cali-registrati>
+
+        <popup-cali-tecnici id="quintotest"></popup-cali-tecnici>
+
+        <popup-aggiornamento-mensile id="echiusurabenzina"></popup-aggiornamento-mensile>
+
+        <popup-aggiornamento-annuale id="eaggiornamentoannuale"></popup-aggiornamento-annuale>
+
+    </template>
+
+    <script>
+        class PopupManager extends Polymer.Element {
+
+            static get is() {
+                return 'popup-manager';
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+
+                window.addEventListener('apriDialog', (e) => {
+                    this.apriDialog(e)
+                })
+
+            }
+
+            apriDialog(e) {
+          
+                let nomePopup = e.detail.popup
+                console.log(nomePopup);
+                let dialogToOpen = this.$[nomePopup]
+                this.$[nomePopup].open()
+                TweenLite.from(dialogToOpen, 2, {transform:"scale(0.5,0.5)", opacity: 0});
+            }
+
+        }
+
+        window.customElements.define(PopupManager.is, PopupManager);
+    </script>
+</dom-module>

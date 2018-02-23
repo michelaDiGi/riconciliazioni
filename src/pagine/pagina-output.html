@@ -1,0 +1,58 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+
+<dom-module id="pagina-output">
+    <template>
+        <style>
+            :host {
+                display: block
+                
+            }
+            .pagOutput{
+               @apply --gestione-pagine;
+            }
+        </style>
+
+<div class="pagOutput">
+<paper-button raised on-tap="aggiornamentomensile">aggiornamento mensile</paper-button>
+<paper-button raised on-tap="aggiornamentoannuale">aggiornamento annuale</paper-button>
+</div>
+
+    </template>
+
+    <script>
+
+        class PaginaOutput extends Polymer.Element {
+
+            static get is() {
+                return 'pagina-output';
+            }
+
+        
+            static get properties() {
+                return {
+                    
+                };
+            }
+            inviaEvento(popUpDaAprire){
+                let dettagliEvento = {
+                    bubbles:true,
+                    detail:{
+                        popup:popUpDaAprire
+                    }
+                }
+                window.dispatchEvent(new CustomEvent( 'apriDialog', dettagliEvento) )
+            }
+
+            aggiornamentomensile (e) {
+                this.inviaEvento('echiusurabenzina')
+            }
+            aggiornamentoannuale(e) {
+                this.inviaEvento('eaggiornamentoannuale')
+        }
+        }
+
+        window.customElements.define(PaginaOutput.is, PaginaOutput);
+    </script>
+</dom-module>

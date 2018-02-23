@@ -1,0 +1,88 @@
+<link rel="import" href="../elements/popup-base.html">
+
+<dom-module id="popup-aggiornamento-annuale">
+
+    <script>
+        class PopupAggiornamentoAnnuale extends PopupBase {
+
+
+            static get form() {
+                return ` 
+                
+                <div class="rigacarburante">
+                        <div class="etichettatipo">Rimanenze iniziali</div>
+                        <paper-input type="number" class="bordo" label="Benzina" value="{{payload.rimanenzeiniziali.benzina}}"></paper-input>
+                        <paper-input type="number" class="bordo" label="Gasolio" value="{{payload.rimanenzeiniziali.gasolio}}"></paper-input>
+                    </div>
+                
+                `
+            }
+
+            static get nuovoCss() {
+                return ` 
+                    .rigacarburante {
+                        display: flex;
+                        flex-direction: row;
+                 align-items: stretch;
+                    }
+
+                    .bordo {
+                        border-style: solid;
+                        border-width: 1px;
+                        margin: 3px;
+                    }
+                    .titolocarburante{
+                        display: flex;
+                        text-align: center;
+                    }
+                    .margine {
+                        margin: 3px;
+                    }
+                
+                `
+            }
+
+
+            static get is() {
+                return 'popup-aggiornamento-annuale';
+            }
+
+            static get properties() {
+                return {
+
+
+                    collection: {
+                        type: String,
+                        value: () => 'aggiornamentoAnnuale'
+                    },
+
+                    payload: {
+                        type: Object,
+                        value: {
+                            
+                            rimanenzeiniziali: {
+                                benzina: 0,
+                                gasolio: 0
+                            }
+                        }
+                    }
+                };
+            }
+
+            azzeraTutto() {
+                this.payload = {
+                  
+                    rimanenzeiniziali: {
+                        benzina: 0,
+                        gasolio: 0
+                    },
+                   
+                }
+            }
+
+
+        }
+
+        window.customElements.define(PopupAggiornamentoAnnuale.is, PopupAggiornamentoAnnuale);
+    </script>
+</dom-module>

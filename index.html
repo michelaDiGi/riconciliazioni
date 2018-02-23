@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>riconciliazioni-ip</title>
+    <meta name="description" content="riconciliazioni-ip description">
+
+    <!-- See https://goo.gl/OOhYW5 -->
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/4.6.0/firebase.js"></script>
+
+<script src="/bower_components/gsap/src/minified/TweenLite.min.js"></script>
+<script src="/bower_components/gsap/src/minified/plugins/CSSPlugin.min.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/4.6.0/firebase-firestore.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyBAllFpmuFQP7tfWiIFNBHY1f79nDy9Y4o",
+        authDomain: "riconciliazioni-ip.firebaseapp.com",
+        databaseURL: "https://riconciliazioni-ip.firebaseio.com",
+        projectId: "riconciliazioni-ip",
+        storageBucket: "riconciliazioni-ip.appspot.com",
+        messagingSenderId: "295797370805"
+      };
+      firebase.initializeApp(config);
+      var db = firebase.firestore();
+    </script>
+<link rel="import" href="/src/log-in-shell.html"> 
+<!--     <link rel="import" href="/src/riconciliazioni-ip-app.html">
+    <link rel="import" href="/src/log-in.html"> -->
+  </head>
+  <body>
+<!--     <riconciliazioni-ip-app></riconciliazioni-ip-app> -->
+<log-in-shell></log-in-shell> 
+  </body>
+</html>

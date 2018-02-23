@@ -1,0 +1,194 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="pagina-lista-carichi">
+    <template>
+        <style>
+             :host {
+                display: block
+            }
+
+
+            .valori {
+                display: flex;
+                flex-direction: row;
+            }
+
+
+
+            .margine {
+                margin: 3px;
+            }
+
+           
+            .pag-tot-lista-carichi {
+                @apply --gestione-pagine;
+            }
+
+            .etichetta-valore-data {
+                display: flex;
+                flex-direction: row;
+            }
+
+            .etichetta-valore-carburante {
+                width: 50%;
+                display: flex;
+                padding: 5px;
+                border-style: solid;
+                border-width: 1px;
+                display: flex;
+                flex-direction: row;
+            }
+
+            .etichetta-tipo {
+               text-align: center;
+            }
+
+            .blocco-informazioni {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                border-width: 1px;
+                /* border-style: solid; */
+            }
+
+            .tutte-le-informazioni {
+                margin: 3px;
+                border-style: solid;
+                border-width: 2px;
+                padding: 5px;
+            }
+
+            .pag-lista-carichi {
+                display: flex;
+                flex-direction: column;
+                /* margin: 25px; */
+            }
+        </style>
+        <div class="pag-tot-lista-carichi">
+            <paper-button raised on-tap="apritest">carico</paper-button>
+            <div class="pag-lista-carichi">
+
+                <template is="dom-repeat" items="[[lista]]" as="robe">
+                    <div class="tutte-le-informazioni distanza-interna">
+                        <div class="etichetta-valore-data">
+                            <div class="etichetta-data margine"></div>
+                            <div class="valore-data margine"> [[dataformattata(robe.data.dataCarico)]] </div>
+                        </div>
+                        <div class="blocco-informazioni">
+                            <div class="etichetta-tipo">Carburanti</div>
+                            <div class="valori">
+                                <div class="etichetta-valore-carburante  distanza-interna">
+                                    <div class="etichetta-carburante margine">Benzina</div>
+                                    <div class="valore-carburante margine">[[robe.data.nuovoCarico.b]]</div>
+                                </div>
+                                <div class="etichetta-valore-carburante  distanza-interna">
+                                    <div class="etichetta-carburante margine">Gasolio</div>
+                                    <div class="valore-carburante margine">[[robe.data.nuovoCarico.g]]</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="blocco-informazioni">
+                            <div class="etichetta-tipo">Eccedenze</div>
+                            <div class="valori">
+                                <div class="etichetta-valore-carburante  distanza-interna">
+                                    <div class="etichetta-carburante margine">Benzina</div>
+                                    <div class="valore-carburante margine">[[robe.data.eccedenze.b]]</div>
+                                </div>
+                                <div class="etichetta-valore-carburante  distanza-interna">
+                                    <div class="etichetta-carburante margine">Gasolio</div>
+                                    <div class="valore-carburante margine">[[robe.data.eccedenze.g]]</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="blocco-informazioni">
+                            <div class="etichetta-tipo">Cali</div>
+                            <div class="valori">
+                                <div class="etichetta-valore-carburante   distanza-interna">
+                                    <div class="etichetta-carburante margine">Benzina</div>
+                                    <div class="valore-carburante margine">[[robe.data.cali.b]]</div>
+                                </div>
+                                <div class="etichetta-valore-carburante   distanza-interna">
+                                    <div class="etichetta-carburante margine">Gasolio</div>
+                                    <div class="valore-carburante margine">[[robe.data.cali.g]]</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </template>
+
+            </div>
+        </div>
+    </template>
+
+    <script>
+        class PaginaListaCarichi extends Polymer.Element {
+
+            static get is() {
+                return 'pagina-lista-carichi';
+            }
+
+
+            static get properties() {
+                return {
+                    lista: {
+                        type: Array,
+                        value: []
+                    },
+                };
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+
+                db.collection("carico")
+                    .onSnapshot((querySnapshot) => {
+                        let listaTemporanea = []
+                        querySnapshot.forEach((doc) => {
+                            listaTemporanea.push({
+                                id: doc.id,
+                                data: doc.data()
+                            })
+                        });
+
+
+
+                        listaTemporanea.sort((a, b) => {
+                            return a.data.dataAssenza - b.data.dataAssenza;
+                        });
+
+                        this.lista = listaTemporanea
+
+                    });
+
+            }
+
+            apritest(e) {
+                this.inviaEvento('test')
+            }
+
+            inviaEvento(popUpDaAprire) {
+                let dettagliEvento = {
+                    bubbles: true,
+                    detail: {
+                        popup: popUpDaAprire
+                    }
+                }
+
+                window.dispatchEvent(new CustomEvent('apriDialog', dettagliEvento))
+            }
+            dataformattata(data) {
+                let giorno = data.getDate();
+                let mese = data.getMonth() + 1;
+                let anno = data.getFullYear();
+                let nuovaData = `${giorno}-${mese}-${anno} `
+                return nuovaData
+            }
+        }
+
+        window.customElements.define(PaginaListaCarichi.is, PaginaListaCarichi);
+    </script>
+</dom-module>
